@@ -1,0 +1,25 @@
+services:
+  atlas:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: atlas
+    ports:
+      - "8501:8501"
+    env_file:
+      - .env
+    volumes:
+      # Keep Google OAuth credentials outside the built image.
+      - type: bind
+        source: ./gmail_api_secrets.json
+        target: /app/gmail_api_secrets.json
+        read_only: true
+        bind:
+          create_host_path: false
+      # Keep the token created after Google authorization between restarts.
+      - type: bind
+        source: ./token.json
+        target: /app/token.json
+        bind:
+          create_host_path: false
+    restart: unless-stopped
