@@ -164,8 +164,8 @@ def send_gmail_tool(to: str, subject: str, body: str) -> str:
     decision=interrupt({
         'type':'approval',
         'to':to,
-        'subject': subject
-        'body': body
+        'subject': subject,
+        'body': body,
         'instruction':'Approve this action? yes/no'
         })
     if not decision.get('approved', False):
