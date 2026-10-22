@@ -75,7 +75,7 @@ splitter=RecursiveCharacterTextSplitter(chunk_size=900,chunk_overlap=120)
 
 @lru_cache(maxsize=1)
 def get_hybrid_retreiver():
-    hybrid=PineconeHybridSearchRetriever(embeddings=embeding_model,index=index,sparse_encoder=BM25Encoder.default(),top_k=15,alpha=0.5)
+    hybrid=PineconeHybridSearchRetriever(embeddings=get_embedding_model(),index=index,sparse_encoder=BM25Encoder.default(),top_k=15,alpha=0.5)
     return hybrid
 @lru_cache(maxsize=1)
 def get_main_retreiver():
