@@ -401,7 +401,7 @@ def chat_node(state:state):
             "- Use `rag_tool` for questions about the uploaded PDF or document. "
             "Always retrieve relevant document content before answering PDF-related questions.\n"
             "- Use `web_search` for current events, recent information, or information "
-            "that requires an internet search or if the information retrieved from rag_tool is not enough to answer the use query .\n"
+            "that requires an internet search or if the information retrieved from rag_tool is not enough to answer the use query and if you are using web search to find any latest data do not specifically mention year or month until user explicitly specifies it.\n"
             "- When the user explicitly asks to send an email and provides enough details, "
             "you MUST call `send_gmail_tool`. Do not merely say that an email is prepared, "
             "triggered, or awaiting approval. The tool will pause for the interface to show "
