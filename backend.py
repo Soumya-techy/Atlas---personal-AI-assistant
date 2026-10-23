@@ -417,8 +417,6 @@ def chat_node(state:state):
     )
     message=[system_message,*state['messages']]
     result=llm.invoke(message)
-    print(result.tool_calls)
-    print(result.content)
     return {'messages':[result]}
 
 def memory_decider(state:state):
