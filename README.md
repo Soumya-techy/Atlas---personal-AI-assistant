@@ -103,7 +103,7 @@ The current backend is configured around:
 
 - BGE embeddings (`BAAI/bge-large-en-v1.5`)
 - Hybrid Pinecone retrieval
-- Candidate retrieval followed by cross-encoder reranking (`BAAI/bge-reranker-large`)
+- Candidate retrieval followed by cross-encoder reranking (`bge-reranker-v2-m3`)
 - A Pinecone index named `project-db`
 
 Embedding and reranker objects are loaded lazily to keep initial app startup lighter than loading those models immediately.
