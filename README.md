@@ -21,9 +21,9 @@ flowchart TB
     U[User] --> UI[Streamlit UI<br/>app.py]
     UI -->|message, uploaded PDF, thread ID| G[LangGraph workflow<br/>backend.py]
 
-    G --> C[Chat node<br/>Gemini model]
-    C --> M[Memory decision node<br/>Groq model]
-    M --> R{Tool call needed?}
+    G --> M[Memory decision node<br/>Groq model]
+    M --> C[Chat node<br/>Gemini model]
+    C --> R{Tool call needed?}
     R -->|No| UI
     R -->|Yes| T[LangGraph ToolNode]
     T --> C
@@ -52,9 +52,9 @@ flowchart TB
 ## How a request flows
 
 1. The Streamlit frontend sends the current user message and thread ID to the LangGraph workflow.
-2. The chat model decides whether it can answer directly or needs one or more tools.
-3. When a tool is needed, the workflow executes it and returns to the chat model with the result.
-4. A separate memory-decision model determines whether the latest exchange should be saved as a long-term memory.
+2. The memory-decision node first decides whether the message warrants a long-term-memory change, helping avoid unnecessary LLM calls and reduce response latency.
+3. The chat model then decides whether it can answer directly or needs one or more tools.
+4. When a tool is needed, the workflow executes it and returns to the chat model with the result.
 5. MongoDB persists the graph checkpoint for the conversation; PostgreSQL holds durable user memories.
 6. The frontend renders the response, tool status, and any approval request.
 
