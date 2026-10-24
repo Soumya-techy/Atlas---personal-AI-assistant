@@ -58,6 +58,20 @@ flowchart TB
 5. MongoDB persists the graph checkpoint for the conversation; PostgreSQL holds durable user memories.
 6. The frontend renders the response, tool status, and any approval request.
 
+## Working examples
+
+### YouTube video transcript retrieval
+
+Atlas finds a relevant YouTube video and presents its transcript in the chat interface.
+
+![Atlas returning a YouTube poetry video and transcript](docs/images/youtube-transcript-demo.png)
+
+### Email approval before sending
+
+Before sending an email, Atlas shows the recipient, subject, and body for explicit user approval.
+
+![Atlas email approval screen](docs/images/email-approval-demo.png)
+
 ## Project layout
 
 | Path | Purpose |
