@@ -94,6 +94,17 @@ The current backend is configured around:
 
 Embedding and reranker objects are loaded lazily to keep initial app startup lighter than loading those models immediately.
 
+## RAG evaluation results
+
+Evaluation of the reranked hybrid-retrieval pipeline produced the following results:
+
+| Metric | Score | Notes |
+| --- | ---: | --- |
+| Faithfulness | 0.91 | Answers remain well grounded in the retrieved context. |
+| Answer relevancy | 0.93 | Answers are highly relevant to the user query. |
+| Context precision | 0.89 | Improved from 0.68 after applying cross-encoder reranking to hybrid retrieval. |
+| Context recall | 1.00 | All relevant context was retrieved. |
+
 ## Conversation threads and memory
 
 Each chat is assigned a unique thread ID. The sidebar reads thread checkpoints from MongoDB so earlier conversations can be reopened. Starting a new chat creates a new thread without intentionally deleting older ones.
