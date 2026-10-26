@@ -18,7 +18,7 @@ from langchain_core.tools import tool
 from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
 from langchain_google_genai import ChatGoogleGenerativeAI
 from pydantic import BaseModel
-from ddgs import DDGS
+from tavily import TavilyClient
 from pymongo import MongoClient
 from langgraph.checkpoint.mongodb import MongoDBSaver
 from pinecone import Pinecone,ServerlessSpec
@@ -112,25 +112,42 @@ def rag_tool(query:str) -> str:
         return "\n\n".join(formated_content)
 
 @tool
-def web_search(query:str) ->list[dict]:
+def web_search(query:str, max_results:int=3) ->list[dict]:
         """
     Use this tool when the user's query requires something that requires a web search or information retrieved
     from the rag tool is not enough to answer the user's query.
 
     Args:
-    query: The question or search query you want to do web search for
+    query: The question or search query you want to do web search for,
+    max_results: the number of results you want to get (default value is 3)
     """
-        web=DDGS()
+        web=TavilyClient(os.getenv('TAVILY_API_KEY'))
         web_search_result=[]
-        search=web.text(query, max_results=5)
-        for content in search:
+        search=web.search(query=query, max_results=max_results,search_depth='fast')
+        for content in search['results']:
               web_search_result.append(
                     {'title': content['title'],
-                     'url' : content['href'],
-                     'content' : content['body']}
+                     'url' : content['url'],
+                     'content' : content['content']}
               )
         return web_search_result
-
+@tool
+def url_extraction(urls:list[str])-> list[dict]:
+    ''' Use this tool when you need to find content from the web through a url
+    
+    Args:
+    urls: enter all the urls you need to extract the content of in form of list of strings (example: ['url1','url2'])
+    '''
+    client=TavilyClient(os.getenv('TAVILY_API_KEY'))
+    response=client.extract(urls=urls)
+    extracted_content=[]
+    for content in response['results']:
+        extracted_content.append({
+            'url':content['url'],
+            'title':content['title'],
+            'content':content['raw_content']      
+        })
+    return extracted_content
 SCOPES = [
     'https://www.googleapis.com/auth/gmail.send',
     'https://www.googleapis.com/auth/gmail.readonly'
@@ -371,7 +388,7 @@ class decider(BaseModel):
 
 
 
-tools=[web_search,rag_tool,send_gmail_tool,read_inbox_emails_tool,yt_video_finder,yt_video_summarizer]
+tools=[web_search,rag_tool,send_gmail_tool,read_inbox_emails_tool,yt_video_finder,yt_video_summarizer,url_extraction]
 tool_node=ToolNode(tools)
 chat_model=ChatGoogleGenerativeAI(
     model='gemini-3.6-flash',
