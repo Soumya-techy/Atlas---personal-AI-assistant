@@ -7,7 +7,7 @@ The interface is designed like a modern chat app: create or revisit conversation
 ## What Atlas can do
 
 - Answer questions using uploaded PDF documents.
-- Search the web and synthesize relevant results.
+- Search the web, extract content from supplied URLs, and synthesize relevant results.
 - Read Gmail inbox messages and prepare or send email through Gmail.
 - Find YouTube videos, obtain transcripts, and explain or summarize their content.
 - Keep separate conversation threads and restore their previous messages.
@@ -29,7 +29,7 @@ flowchart TB
     T --> C
 
     T --> DOC[PDF RAG tool]
-    T --> WEB[Web search tool]
+    T --> WEB[Web research tools]
     T --> MAIL[Gmail tools]
     T --> YT[YouTube tools]
 
@@ -38,7 +38,8 @@ flowchart TB
     DOC --> PC
     DOC --> RR[Cross-encoder reranker]
 
-    WEB --> DDG[DuckDuckGo search]
+    WEB --> TAVSEARCH[Tavily Search API]
+    WEB --> TAVEXTRACT[Tavily Extract API<br/>URL content extraction]
     MAIL --> GOOGLE[Gmail API<br/>Google OAuth]
     YT --> YOUTUBE[YouTube Data API<br/>Transcript API]
 
@@ -89,7 +90,7 @@ Before sending an email, Atlas shows the recipient, subject, and body for explic
 | Chat and tool reasoning | Google Gemini through `langchain-google-genai` |
 | Memory decision | Groq model through `langchain-groq` |
 | Document retrieval | BGE embeddings, Pinecone hybrid search, and a cross-encoder reranker |
-| Web research | DuckDuckGo search plus page text extraction |
+| Web research | Tavily Search API plus Tavily Extract API for URL content extraction |
 | Gmail | Google Gmail API using OAuth 2.0 |
 | YouTube | YouTube Data API for discovery and `youtube-transcript-api` for transcript retrieval |
 | Conversation persistence | MongoDB LangGraph checkpointer |
@@ -146,6 +147,7 @@ This flow depends on the browser session, the active Streamlit process, Gmail OA
 - A Google Gemini API key
 - A Groq API key
 - Pinecone account and API key
+- Tavily API key for web search and URL content extraction
 - MongoDB instance
 - PostgreSQL instance
 - Google Cloud OAuth desktop credentials with the Gmail API enabled
@@ -160,6 +162,7 @@ Create a `.env` file in the project root and provide the service credentials use
 GEMINI_API_KEY=your_gemini_key
 GROQ_API_KEY=your_groq_key
 PINECONE_API_KEY=your_pinecone_key
+TAVILY_API_KEY=your_tavily_api_key
 MONGODB_URI=your_mongodb_connection_string
 POSTGRESQL_URI=your_postgresql_connection_string
 YT_API_KEY=your_youtube_data_api_key
